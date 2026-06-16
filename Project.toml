@@ -1,0 +1,27 @@
+name = "TamboAtmMuonFlux"
+uuid = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+authors = ["Tanvi Krishnan <tkrishnan@g.harvard.edu>"]
+version = "0.1.0"
+
+[deps]
+HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
+[weakdeps]
+TamboSim = "00000000-0000-0000-0000-000000000001"
+
+[extensions]
+TamboAtmMuonFluxTamboSimExt = ["TamboSim"]
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
+
+[compat]
+julia = "1.9"
+HDF5 = "0.16, 0.17"
+Interpolations = "0.14, 0.15"
+Unitful = "1.12"
