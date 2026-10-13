@@ -36,20 +36,26 @@ function __init__()
     _load_interp()
 end
 
+const _FLUX_UNIT = u"GeV^-1*cm^-2*s^-1*sr^-1"
+
 """
-    Φ_μ(E_GeV, costheta, h_km) -> Float64
+    Φ_μ(E, costheta, h) -> Quantity
 
-Atmospheric muon flux (μ⁺ + μ⁻) in GeV⁻¹ cm⁻² s⁻¹ sr⁻¹.
+Atmospheric muon flux (μ⁺ + μ⁻), returned in GeV⁻¹ cm⁻² s⁻¹ sr⁻¹.
 
-- `E_GeV`    : muon kinetic energy in GeV (valid range: 100–1e8)
+- `E`        : muon kinetic energy, a Unitful energy (valid range: 100 GeV–1e8 GeV)
 - `costheta` : cosine of local zenith angle (0 = horizontal, 1 = vertical)
-- `h_km`     : observation altitude above sea level in km (valid range: 0–50)
+- `h`        : observation altitude above sea level, a Unitful length (valid range: 0–50 km)
 
-Returns 0.0 outside the interpolation grid.
+Plain numbers are also accepted for `E` and `h`, interpreted as GeV and km.
+
+Returns zero flux outside the interpolation grid.
 """
-function Φ_μ(E_GeV::Float64, costheta::Float64, h_km::Float64)::Float64
-    _INTERP[](log10(E_GeV), costheta, h_km)
+function Φ_μ(E_GeV::Float64, costheta::Float64, h_km::Float64)
+    _INTERP[](log10(E_GeV), costheta, h_km) * _FLUX_UNIT
 end
 
-# Convenience: accept any Real arguments
-Φ_μ(E, ct, h) = Φ_μ(Float64(E), Float64(ct), Float64(h))
+Φ_μ(E::Unitful.Energy, ct::Real, h::Unitful.Length) =
+    Φ_μ(Float64(ustrip(u"GeV", E)), Float64(ct), Float64(ustrip(u"km", h)))
+
+Φ_μ(E::Real, ct::Real, h::Real) = Φ_μ(Float64(E), Float64(ct), Float64(h))

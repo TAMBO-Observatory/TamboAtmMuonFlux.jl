@@ -6,7 +6,7 @@ using Unitful
 import LinearAlgebra: norm, dot
 
 """
-    Φ_μ(q::TamboSim.Frame) -> Float64
+    Φ_μ(q::TamboSim.Frame) -> Quantity
 
 Atmospheric muon flux for a TamboSim Frame event (GeV⁻¹ cm⁻² s⁻¹ sr⁻¹).
 
@@ -16,10 +16,9 @@ M frame by CosmicRayInjection.
 """
 function TamboAtmMuonFlux.Φ_μ(q::TamboSim.Frame)
     p     = q["injection_initial_state"]
-    E_GeV = ustrip(u"GeV", p.energy)
     cosθ  = _local_zenith(p)
-    h_km  = Float64(q["injection"]["altitude"])
-    Φ_μ(E_GeV, cosθ, h_km)
+    h     = Float64(q["injection"]["altitude"]) * u"km"
+    Φ_μ(p.energy, cosθ, h)
 end
 
 # cos of local zenith: dot(-direction, r̂) where r̂ points radially outward.

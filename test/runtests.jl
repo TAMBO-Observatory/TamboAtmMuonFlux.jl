@@ -1,14 +1,18 @@
 using Test
 using TamboAtmMuonFlux
+using Unitful
+
+const F = u"GeV^-1*cm^-2*s^-1*sr^-1"
 
 @testset "TamboAtmMuonFlux" begin
 
     @testset "basic sanity" begin
         φ = Φ_μ(1e4, 1.0, 3.0)
-        @test isfinite(φ)
-        @test φ > 0.0
+        @test unit(φ) == F
+        @test isfinite(ustrip(φ))
+        @test φ > 0.0F
         # rough order-of-magnitude check: ~O(1e-14 – 1e-4)
-        @test 1e-15 < φ < 1e-4
+        @test 1e-15F < φ < 1e-4F
     end
 
     @testset "zenith dependence" begin
@@ -32,12 +36,17 @@ using TamboAtmMuonFlux
     end
 
     @testset "out-of-range returns zero" begin
-        @test Φ_μ(1e-3, 1.0, 3.0) == 0.0   # below MCEq grid minimum (~0.1 GeV)
-        @test Φ_μ(1e4, 1.0, 100.0) == 0.0  # above 20 km
+        @test Φ_μ(1e-3, 1.0, 3.0) == 0.0F   # below MCEq grid minimum (~0.1 GeV)
+        @test Φ_μ(1e4, 1.0, 100.0) == 0.0F  # above 50 km
     end
 
     @testset "Real argument promotion" begin
         @test Φ_μ(10000, 1, 3) == Φ_μ(1e4, 1.0, 3.0)
+    end
+
+    @testset "Unitful arguments" begin
+        @test Φ_μ(10u"TeV", 1.0, 3000u"m") ≈ Φ_μ(1e4, 1.0, 3.0)
+        @test Φ_μ(1e4u"GeV", 0.5, 3.0u"km") == Φ_μ(1e4, 0.5, 3.0)
     end
 
 end
