@@ -43,7 +43,7 @@ Atmospheric muon flux (μ⁺ + μ⁻) in GeV⁻¹ cm⁻² s⁻¹ sr⁻¹.
 
 - `E_GeV`    : muon kinetic energy in GeV (valid range: 100–1e8)
 - `costheta` : cosine of local zenith angle (0 = horizontal, 1 = vertical)
-- `h_km`     : observation altitude above sea level in km (valid range: 0–20)
+- `h_km`     : observation altitude above sea level in km (valid range: 0–50)
 
 Returns 0.0 outside the interpolation grid.
 """
